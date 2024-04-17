@@ -1,10 +1,11 @@
 import React, { useState } from "react";
-import { Box, Button, Container, Flex, Heading, Input, List, ListItem, Text, useToast, IconButton, Editable, EditableInput, EditablePreview } from "@chakra-ui/react";
+import { Box, Button, Container, Flex, Heading, Input, List, ListItem, Text, useToast, IconButton, Editable, EditableInput, EditablePreview, Select } from "@chakra-ui/react";
 import { FaPlus, FaTrash, FaEdit } from "react-icons/fa";
 
 const Index = () => {
   const [coffeeList, setCoffeeList] = useState([]);
   const [inputValue, setInputValue] = useState("");
+  const [coffeeType, setCoffeeType] = useState("espresso");
   const toast = useToast();
 
   const handleAddCoffee = () => {
@@ -21,6 +22,7 @@ const Index = () => {
     const newEntry = {
       id: Date.now(),
       text: inputValue,
+      type: coffeeType,
       timestamp: new Date().toLocaleTimeString(),
     };
     setCoffeeList([...coffeeList, newEntry]);
@@ -46,6 +48,10 @@ const Index = () => {
       <Heading mb={4}>Daily Coffee Tracker</Heading>
       <Flex mb={4}>
         <Input value={inputValue} onChange={(e) => setInputValue(e.target.value)} placeholder="Add a coffee entry" mr={2} />
+        <Select value={coffeeType} onChange={(e) => setCoffeeType(e.target.value)} placeholder="Select type" mr={2}>
+          <option value="espresso">Espresso</option>
+          <option value="cappuccino">Cappuccino</option>
+        </Select>
         <Button leftIcon={<FaPlus />} colorScheme="teal" onClick={handleAddCoffee}>
           Add
         </Button>
@@ -54,7 +60,7 @@ const Index = () => {
         {coffeeList.map((entry) => (
           <ListItem key={entry.id} p={3} shadow="md" borderWidth="1px">
             <Flex justify="space-between" align="center">
-              <Editable defaultValue={entry.text} onSubmit={(newText) => handleEditCoffee(entry.id, newText)}>
+              <Editable defaultValue={`${entry.text} (${entry.type})`} onSubmit={(newText) => handleEditCoffee(entry.id, newText)}>
                 <EditablePreview />
                 <EditableInput />
               </Editable>
